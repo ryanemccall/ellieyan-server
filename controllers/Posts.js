@@ -1,8 +1,7 @@
 const Express = require("express");
-const Post = require("../../../db-api/models/Post");
 const router = Express.Router();
 //let Auth = require('../middleware/Auth');
-const { User, Posts } = require('../models');
+const { User, Posts, } = require('../models');
 
 //CREATE POST
 router.post('/create/', async(req, res) => {
@@ -32,3 +31,73 @@ router.post('/create/', async(req, res) => {
     })
 }
 })
+//GET POSTS
+router.get("/all/:id", async(req, res) => {
+    let u = await User.findOne({
+        where: {
+            id: req.params.id
+        }
+    })
+    let posts = u ? await u.getPosts(): null
+    if (posts){
+        let cleanPosts = posts.map(p => {
+            const {id, content } = p
+            return { id, content }
+        })
+        res.send(cleanPosts)
+    } else {
+        res.send(posts)
+    }
+})
+
+//UPDATE POSTS
+
+router.put("/post/:id", async (req, res) => {
+    const { postTitle, content } = req.body.post
+    const query = {
+        where: {
+            id: req.params.id,
+            userId: req.user.id,
+        }
+    };
+
+    const updatePost = {
+        postTitle: postTitle,
+        content: content,
+    }
+    
+    try {
+        const update = await Posts.update(updatePost, query);
+        res.status(200).json({
+            message: "Your Post has been updated!"
+        });
+    } catch (err) {
+        res.status(500).json({
+            message: `Sorry, there was an issue updating your post: ${err}`
+        })
+    }
+})
+
+//DELETE POSTS
+
+router.delete("/post/delete/:id", async (req, res) => {
+    const owner = req.user.id;
+    const postId = req.params.id;
+
+    try {
+        const query = {
+            where: {
+                id: postId,
+                userId: owner
+            },
+        };
+
+        await Posts.destroy(query);
+        res.status(200).json({ message: "Post has been removed."})
+    } catch (err) {
+        res.status(500).json( `There was an issue removing your post: ${err}`)
+    }
+})
+
+//Need to Like + Disklike and store that data
+module.exports = router
