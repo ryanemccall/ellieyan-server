@@ -14,9 +14,9 @@ const {sequelize} = require('./db')
 })()
 
 const port = 3000
-const auth = require('./controllers/Auth');
+ const auth = require('./middleware/Auth');
 
-app.use('/', auth)
+ app.use('/', auth)
 
 app.listen(port, () => {
     console.log(`[Server]: App is listening on 3000.`)
