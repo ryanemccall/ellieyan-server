@@ -1,9 +1,10 @@
 const Express = require("express");
 const router = Express.Router();
 const { Favorites } = require("../models")
+const Auth = require('../middleware/Auth')
 
 //Create a Favorite
-router.post("/create", async (req, res) => {
+router.post("/create", Auth, async (req, res) => {
     const { gameTitle, gameInfo, gameImage } = await req.body.Favorites;
     const id = req.user.id;
     const addFav = {
@@ -25,7 +26,7 @@ router.post("/create", async (req, res) => {
 });
 
 //Get Favorites List
-router.get("/myFavs", async (req, res) => {
+router.get("/myFavs", Auth, async (req, res) => {
     const id = req.user.id;
     try {
         const userFavorites = await Favorites.findAll({
@@ -40,7 +41,7 @@ router.get("/myFavs", async (req, res) => {
 });
 
 //Remove Item from Favorites List
-router.delete("/:id", async(req, res) => {
+router.delete("/:id", Auth, async(req, res) => {
     const id = req.user.id;
     const favoritesId = req.params.id;
 

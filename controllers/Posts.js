@@ -1,10 +1,10 @@
 const Express = require("express");
 const router = Express.Router();
-//let Auth = require('../middleware/Auth');
+const Auth = require('../middleware/Auth')
 const { User, Posts, } = require('../models');
 
 //CREATE POST
-router.post('/create/', async(req, res) => {
+router.post('/create/', Auth, async(req, res) => {
     // const newPost = new Posts(req.body);
      const { id } = req.user;
     const postEntry = {
@@ -32,7 +32,7 @@ router.post('/create/', async(req, res) => {
 }
 })
 //GET POSTS
-router.get("/all/:id", async(req, res) => {
+router.get("/all/:id", Auth, async(req, res) => {
     let u = await User.findOne({
         where: {
             id: req.params.id
@@ -52,7 +52,7 @@ router.get("/all/:id", async(req, res) => {
 
 //UPDATE POSTS
 
-router.put("/post/:id", async (req, res) => {
+router.put("/post/:id", Auth, async (req, res) => {
     const { postTitle, content } = req.body.post
     const query = {
         where: {
@@ -80,7 +80,7 @@ router.put("/post/:id", async (req, res) => {
 
 //DELETE POSTS
 
-router.delete("/post/delete/:id", async (req, res) => {
+router.delete("/post/delete/:id", Auth, async (req, res) => {
     const owner = req.user.id;
     const postId = req.params.id;
 

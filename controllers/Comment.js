@@ -1,9 +1,10 @@
 const Express = require("express");
 const router = Express.Router();
-const { User, Posts, Comment } = require('../models');
+const Auth = require('../middleware/Auth')
+const { Posts, Comment } = require('../models');
 
 //CREATE COMMENT
-router.post('/comment/', async(req, res) => {
+router.post('/comment/', Auth, async(req, res) => {
     const owner = req.user.id;
     const postId = req.params.id;
     const commentEntry = {
@@ -31,7 +32,7 @@ router.post('/comment/', async(req, res) => {
 }
 })
 //GET COMMENTS
-router.get("/comment/all/:id", async(req, res) => {
+router.get("/comment/all/:id", Auth, async(req, res) => {
     let p = await Posts.findOne({
         where: {
             id: req.params.id
@@ -51,7 +52,7 @@ router.get("/comment/all/:id", async(req, res) => {
 
 //UPDATE POSTS
 
-router.put("/comment/:id", async (req, res) => {
+router.put("/comment/:id", Auth, async (req, res) => {
     const { content } = req.body.post
     const query = {
         where: {
@@ -79,7 +80,7 @@ router.put("/comment/:id", async (req, res) => {
 
 //DELETE POSTS
 
-router.delete("/comment/delete/:id", async (req, res) => {
+router.delete("/comment/delete/:id", Auth, async (req, res) => {
     const owner = req.user.id;
     const commentId = req.params.id;
 
