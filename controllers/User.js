@@ -3,24 +3,24 @@ const router = Express.Router();
 const { UniqueConstraintError } = require("sequelize/lib/errors");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
-const User = require("../models/User");
+const {User} = require("../models/");
 
 //REGISTER
 router.post('/register', async (req, res) => {
-    let { username, email, password } = req.body.username;
+    let { username, email, password } = req.body.user;
 
     try {
-        const User = await User.create({
+        const user = await User.create({
             username,
             email,
             password: bcrypt.hashSync(password, 15)
         });
 
-        let token = jwt.sign({ id: User.id }, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 12});
+        let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 12});
        
-        res.status(200).json({
-            message: `Thanks for signing up! Welcome ${req.body.username}`,
-            user: User,
+        res.status(201).json({
+            message: `Thanks for signing up! Welcome!`,
+            user: user,
             sessionToken: token
         });
     } catch (err) {
@@ -30,8 +30,10 @@ router.post('/register', async (req, res) => {
             });
         } else {
             res.status(500).json({
-                message: "Something went wrong. Please try again."
+                message: "Something went wrong. Please try again.",
+                err
             });
+            console.log(err)
         }
     }
    
