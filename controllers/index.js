@@ -1,6 +1,7 @@
 module.exports = {
     User: require("./User"),
-    Posts: require("./Posts"),
+    Post: require("./Post"),
     Comment: require("./Comment"),
-    Favorites: require("./Favorites")
+    Favorites: require("./Favorites"),
+    Profile: require("./Profile")
 };

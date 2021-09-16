@@ -1,7 +1,7 @@
 const Express = require("express");
 const router = Express.Router();
 const Auth = require('../middleware/Auth')
-const { User, Posts, } = require('../models');
+const { User, Post, } = require('../models');
 
 //CREATE POST
 router.post('/create/', Auth, async(req, res) => {
@@ -15,7 +15,7 @@ router.post('/create/', Auth, async(req, res) => {
     try {
         let u = await User.findOne({ where: {id: req.body.id }})
         if(u) {
-            let post = await Posts.create(postEntry);
+            let post = await Post.create(postEntry);
             res.status(200).json({
                 post,
                 message: "Post made!"
@@ -67,7 +67,7 @@ router.put("/post/:id", Auth, async (req, res) => {
     }
     
     try {
-        const update = await Posts.update(updatePost, query);
+        const update = await Post.update(updatePost, query);
         res.status(200).json({
             message: "Your Post has been updated!"
         });
@@ -92,7 +92,7 @@ router.delete("/post/delete/:id", Auth, async (req, res) => {
             },
         };
 
-        await Posts.destroy(query);
+        await Post.destroy(query);
         res.status(200).json({ message: "Post has been removed."})
     } catch (err) {
         res.status(500).json( `There was an issue removing your post: ${err}`)
