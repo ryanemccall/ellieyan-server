@@ -4,7 +4,7 @@ const { Favorites } = require("../models")
 const Auth = require('../middleware/Auth')
 
 //Create a Favorite
-router.post("/create", Auth, async (req, res) => {
+router.post("/", Auth, async (req, res) => {
     const { gameTitle, gameInfo, gameImage } = await req.body.Favorites;
     const id = req.user.id;
     const addFav = {
