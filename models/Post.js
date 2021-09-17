@@ -8,9 +8,6 @@ module.exports = (sequelize, DataTypes) => {
         },
         content: {
             type: DataTypes.STRING(500),
-        },
-        likes: {
-            type: DataTypes.INTEGER
         }
     })
     return Post

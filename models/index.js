@@ -10,6 +10,7 @@ const DefineFavorites = require('./Favorites')
 const DefineProfile = require('./Profile')
 
 
+
 const User = DefineUser(sequelize, DataTypes); // Defines the model
 const Post = DefinePost(sequelize, DataTypes);  // Defines the model
 const Comment = DefineComment(sequelize, DataTypes); 

@@ -3,5 +3,6 @@ module.exports = {
     Post: require("./Post"),
     Comment: require("./Comment"),
     Favorites: require("./Favorites"),
-    Profile: require("./Profile")
+    Profile: require("./Profile"),
+    Likes: require("./Likes")
 };

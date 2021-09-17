@@ -12,7 +12,9 @@ router.post('/', Auth, async(req, res) => {
                 content: req.body.post.content,
                 UserId: req.body.UserId
             }) 
-            res.status(200).json(post)
+            res.status(200).json({
+                message:'Post made!', 
+                post: post})
         }  catch (err) {
     res.status(500).json({
         message: "Failed to create Post"
@@ -29,8 +31,8 @@ router.get("/all/:id", Auth, async(req, res) => {
     let posts = u ? await u.getPosts(): null
     if (posts){
         let cleanPosts = posts.map(p => {
-            const {id, content } = p
-            return { id, content }
+            const {id, postTitle, content } = p
+            return { id, postTitle, content }
         })
         res.send(cleanPosts)
     } else {
@@ -40,12 +42,12 @@ router.get("/all/:id", Auth, async(req, res) => {
 
 //UPDATE POSTS
 
-router.put("/post/:id", Auth, async (req, res) => {
+router.put("/:id", Auth, async (req, res) => {
     const { postTitle, content } = req.body.post
     const query = {
         where: {
             id: req.params.id,
-            userId: req.user.id,
+            UserId: req.user.id,
         }
     };
 
@@ -57,7 +59,8 @@ router.put("/post/:id", Auth, async (req, res) => {
     try {
         const update = await Post.update(updatePost, query);
         res.status(200).json({
-            message: "Your Post has been updated!"
+            message: "Your Post has been updated!",
+            update: update
         });
     } catch (err) {
         res.status(500).json({
@@ -68,7 +71,7 @@ router.put("/post/:id", Auth, async (req, res) => {
 
 //DELETE POSTS
 
-router.delete("/post/delete/:id", Auth, async (req, res) => {
+router.delete("/delete/:id", Auth, async (req, res) => {
     const owner = req.user.id;
     const postId = req.params.id;
 
@@ -76,7 +79,7 @@ router.delete("/post/delete/:id", Auth, async (req, res) => {
         const query = {
             where: {
                 id: postId,
-                userId: owner
+                UserId: owner
             },
         };
 
@@ -88,4 +91,6 @@ router.delete("/post/delete/:id", Auth, async (req, res) => {
 })
 
 //Need to Like + Disklike and store that data
+
+
 module.exports = router

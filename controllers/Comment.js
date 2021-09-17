@@ -1,30 +1,26 @@
 const Express = require("express");
 const router = Express.Router();
 const Auth = require('../middleware/Auth')
-const { Posts, Comment } = require('../models');
+const { User, Post, Comment } = require('../models');
 
 //CREATE COMMENT
-router.post('/comment/', Auth, async(req, res) => {
-    const owner = req.user.id;
-    const postId = req.params.id;
-    const commentEntry = {
-        postId: postId,
-        content,
-        userId: owner
-    }
-    try {
-        let p = await Posts.findOne({ where: {id: req.body.id }})
-        if(p) {
-            let comment = await Comment.create(commentEntry);
+router.post('/post/:pid', Auth, async(req, res) => {
+   try {
+     const post = await Post.findOne({where: { id: req.params.pid }})  
+        if (post) {
+            const comment = await Comment.create({
+                content: req.body.comment.content,
+                UserId: req.body.UserId
+            })
             res.status(200).json({
-                comment,
-                message: "Comment made!"
-            });
+                message: 'Comment made',
+                comment: comment
+            })
         } else {
             res.status(405).json({
-                message: "Can't make comment, post not found"
-        })
-    }
+                message: "There doesn't seem to be a post to comment on"
+            })
+        }
 } catch (err) {
     res.status(500).json({
         message: "Failed to create comment"
@@ -32,10 +28,10 @@ router.post('/comment/', Auth, async(req, res) => {
 }
 })
 //GET COMMENTS
-router.get("/comment/all/:id", Auth, async(req, res) => {
-    let p = await Posts.findOne({
+router.get("/all/post/:pid", Auth, async(req, res) => {
+    let p = await Post.findOne({
         where: {
-            id: req.params.id
+            id: req.params.pid
         }
     })
     let comments = p ? await p.getComments(): null
@@ -52,12 +48,13 @@ router.get("/comment/all/:id", Auth, async(req, res) => {
 
 //UPDATE POSTS
 
-router.put("/comment/:id", Auth, async (req, res) => {
-    const { content } = req.body.post
+router.put("/post/:pid/user/:uid/:cid", Auth, async (req, res) => {
+    const { content } = req.body.comment
     const query = {
         where: {
-            id: req.params.id,
-            userId: req.user.id,
+            id: req.params.cid,
+            PostId: req.params.pid,
+            UserId: req.params.uid
         }
     };
 
@@ -80,7 +77,7 @@ router.put("/comment/:id", Auth, async (req, res) => {
 
 //DELETE POSTS
 
-router.delete("/comment/delete/:id", Auth, async (req, res) => {
+router.delete("/delete/:id", Auth, async (req, res) => {
     const owner = req.user.id;
     const commentId = req.params.id;
 
@@ -88,7 +85,7 @@ router.delete("/comment/delete/:id", Auth, async (req, res) => {
         const query = {
             where: {
                 id: commentId,
-                userId: owner
+                UserId: owner
             },
         };
 
