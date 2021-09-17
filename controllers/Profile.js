@@ -1,7 +1,8 @@
 const router = require('express').Router()
+const Auth = require('../middleware/Auth')
 const { User, Profile } = require('../models')
 
-router.get('/all', async (req, res) => {
+router.get('/all', Auth, async (req, res) => {
     try {
         const all = await Profile.findAll()
         res.status(200).json(all)
@@ -10,7 +11,7 @@ router.get('/all', async (req, res) => {
     }
 })
 
-router.get('/user/:uid', async (req, res) => {
+router.get('/user/:uid', Auth, async (req, res) => {
     try {
         //Eager
         const user = await User.findOne({
@@ -23,7 +24,7 @@ router.get('/user/:uid', async (req, res) => {
     }
 })
 
-router.get('/:id', async (req, res) => {
+router.get('/:id', Auth, async (req, res) => {
     try {
         const oneP = await Profile.findOne({ where: { id: req.params.id }})
         res.status(200).json(oneP)
@@ -32,7 +33,7 @@ router.get('/:id', async (req, res) => {
     }
 })
 
-router.post('/', async (req, res) => {
+router.post('/', Auth, async (req, res) => {
     try {
         const result = await Profile.create({
             firstName: req.body.profile.firstName,
@@ -46,3 +47,5 @@ router.post('/', async (req, res) => {
         res.status(500).json({ err })
     }
 })
+
+module.exports = router;

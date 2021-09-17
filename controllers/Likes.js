@@ -1,10 +1,10 @@
 const Express = require("express");
 const router = Express.Router();
-const Auth = require('../middleware/Auth')
+const Auth = require('../middleware/Auth');
 const { User, Post, } = require('../models');
 
 //Like A Post
-router.post('/user/:uid/post/:pid', async (req, res) => {
+router.post('/user/:uid/post/:pid', Auth, async (req, res) => {
     try {
         const user = await User.findOne({ where: { id: req.params.uid }})
         const post = await Post.findOne({ where: {id: req.params.pid }})
@@ -23,7 +23,7 @@ router.post('/user/:uid/post/:pid', async (req, res) => {
 })
 
 //Unlike a Post
-router.delete('/user/:uid/post/:pid', async (req, res) => {
+router.delete('/user/:uid/post/:pid', Auth, async (req, res) => {
     try {
         const user = await User.findOne({ where: { id: req.params.uid }})
         const unlike = await user.removepLikee(req.params.pid)
@@ -40,7 +40,7 @@ router.delete('/user/:uid/post/:pid', async (req, res) => {
 })
 
 //Like a Comment
-router.post('/user/:uid/comment/:cid', async (req, res) => {
+router.post('/user/:uid/comment/:cid', Auth, async (req, res) => {
     try {
         const user = await User.findOne({ where: { id: req.params.uid }})
         const comment = await Comment.findOne({ where: {id: req.params.cid }})
@@ -59,7 +59,7 @@ router.post('/user/:uid/comment/:cid', async (req, res) => {
 })
 
 //Unlike a Comment
-router.delete('/user/:uid/comment/:cid', async (req, res) => {
+router.delete('/user/:uid/comment/:cid', Auth, async (req, res) => {
     try {
         const user = await User.findOne({ where: { id: req.params.uid }})
         const unlike = await user.removecLikee(req.params.cid)
@@ -74,3 +74,5 @@ router.delete('/user/:uid/comment/:cid', async (req, res) => {
         })
     }
 })
+
+module.exports = router;

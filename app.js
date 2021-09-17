@@ -7,19 +7,6 @@ const app = Express()
 const port = 3000
 
 
-//const controllers = require("./controllers");
-
- 
-
-//  app.use(Express.json());
-
-
-
- //app.use(require('./middleware/Auth'));
- //app.use('/post', controllers.Posts);
- //app.use('/comment', controllers.Comment);
- //app.use('/favorites', controllers.Favorites);
-
  ;(async () => {
     // try{
     //     await sequelize.authenticate();
@@ -33,8 +20,17 @@ const port = 3000
 
     const user = require('./controllers/User')
     const post = require('./controllers/Post')
+    const comment = require('./controllers/Comment')
+    const profile = require('./controllers/Profile')
+    const like = require('./controllers/Likes')
+    const favorite = require('./controllers/Favorites')
     app.use('/user', user);
-    app.use('/post', post)
+    app.use('/post', post);
+    app.use('/comment', comment);
+    app.use('/profile', profile);
+    app.use('/like', like);
+    app.use('/favorite', favorite);
+
 
     app.listen(port, () => {
         console.log(`[Server]: App is listening on 3000.`)
