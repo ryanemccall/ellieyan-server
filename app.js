@@ -32,7 +32,9 @@ const port = 3000
     app.use(Express.json())
 
     const user = require('./controllers/User')
+    const post = require('./controllers/Post')
     app.use('/user', user);
+    app.use('/post', post)
 
     app.listen(port, () => {
         console.log(`[Server]: App is listening on 3000.`)

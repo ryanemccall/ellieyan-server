@@ -4,28 +4,16 @@ const Auth = require('../middleware/Auth')
 const { User, Post, } = require('../models');
 
 //CREATE POST
-router.post('/create/', Auth, async(req, res) => {
-    // const newPost = new Posts(req.body);
-     const { id } = req.user;
-    const postEntry = {
-        postTitle,
-        content,
-        userId: id
-    }
+router.post('/', Auth, async(req, res) => {
+    
     try {
-        let u = await User.findOne({ where: {id: req.body.id }})
-        if(u) {
-            let post = await Post.create(postEntry);
-            res.status(200).json({
-                post,
-                message: "Post made!"
-            });
-        } else {
-            res.status(405).json({
-                message: "Can't make post, user not found"
-        })
-    }
-} catch (err) {
+        const post = await Post.create({
+                postTitle: req.body.post.postTitle,
+                content: req.body.post.content,
+                UserId: req.body.UserId
+            }) 
+            res.status(200).json(post)
+        }  catch (err) {
     res.status(500).json({
         message: "Failed to create Post"
     })

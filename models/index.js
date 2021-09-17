@@ -16,15 +16,27 @@ const Comment = DefineComment(sequelize, DataTypes);
 const Favorites = DefineFavorites(sequelize, DataTypes);
 const Profile = DefineProfile(sequelize, DataTypes);
 // Define Associations
+User.hasOne(Profile)
+Profile.belongsTo(User) //One to One
+
  User.hasMany(Post)
 Post.belongsTo(User) //one to Many
 
-User.hasOne(Profile)
-Profile.belongsTo(User) //one to one
+User.hasMany(Comment)
+Comment.belongsTo(Post) //one to Many
+
+User.hasMany(Favorites)
+Favorites.belongsTo(User) //one to Many
+
+User.belongsToMany(Post, {through: 'pLikes', as: 'pLikee'})
+Post.belongsToMany(User, {through: 'pLikes', as: 'pLiker'}) //Many to Many
+
+User.belongsToMany(Comment, {through: 'cLikes', as: 'cLikee'}) 
+Comment.belongsToMany(User, {through: 'cLikes', as: 'cLiker'}) //Many to Many
 
 
 // Sync
 synceDb(sequelize, true)
 
 
-module.exports = { User, Posts, Comment, Favorites, Profile }
+module.exports = { User, Post, Comment, Favorites, Profile }
