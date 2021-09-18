@@ -7,13 +7,14 @@ const {User} = require("../models/");
 
 //REGISTER
 router.post('/register', async (req, res) => {
-    let { username, email, password } = req.body.user;
+    let { username, email, password, Role } = req.body.user;
 
     try {
         const user = await User.create({
             username,
             email,
-            password: bcrypt.hashSync(password, 15)
+            password: bcrypt.hashSync(password, 15),
+            Role: Role || 'User',
         });
 
         let token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {expiresIn: 60 * 60 * 12});
@@ -77,5 +78,44 @@ router.post('/login', async (req, res) => {
         })
     }
 });
+
+//ADMIN GET ALL
+router.get('/', async (req, res) => {
+    try {
+        const allUsers = await User.findAll()
+        if (allUsers.length === 0){
+            res.status(404).json({
+                message: 'There are no users at this time'
+            })
+        } else {
+            res.status(200).json({
+                message: 'All the Users',
+                allUsers: allUsers})
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: `There was an issue: ${err}`
+        })
+    }
+})
+
+//ADMIN DELETE USER
+router.delete('/:id', async (req, res) => {
+    try {
+        const deleteUser = await User.destroy({where: { id: req.params.id }})
+        if (deleteUser === 1) {
+            res.status(200).json({
+                message: 'User has been removed',
+                deleteUser: deleteUser
+            })
+        } else {
+            res.status(404).json('No user found')
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: `There was an issue: ${err}`
+        })
+    }
+})
 
 module.exports = router;

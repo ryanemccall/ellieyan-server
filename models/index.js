@@ -8,7 +8,7 @@ const DefinePost = require('./Post')
 const DefineComment = require('./Comment')
 const DefineFavorites = require('./Favorites')
 const DefineProfile = require('./Profile')
-
+const DefineRole = require('./Role')
 
 
 const User = DefineUser(sequelize, DataTypes); // Defines the model
@@ -16,6 +16,7 @@ const Post = DefinePost(sequelize, DataTypes);  // Defines the model
 const Comment = DefineComment(sequelize, DataTypes); 
 const Favorites = DefineFavorites(sequelize, DataTypes);
 const Profile = DefineProfile(sequelize, DataTypes);
+
 // Define Associations
 User.hasOne(Profile)
 Profile.belongsTo(User) //One to One
@@ -28,6 +29,7 @@ Comment.belongsTo(Post) //one to Many
 
 User.hasMany(Favorites)
 Favorites.belongsTo(User) //one to Many
+
 
 User.belongsToMany(Post, {through: 'pLikes', as: 'pLikee'})
 Post.belongsToMany(User, {through: 'pLikes', as: 'pLiker'}) //Many to Many
