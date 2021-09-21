@@ -8,7 +8,7 @@ const DefinePost = require('./Post')
 const DefineComment = require('./Comment')
 const DefineFavorites = require('./Favorites')
 const DefineProfile = require('./Profile')
-const DefineRole = require('./Role')
+
 
 
 const User = DefineUser(sequelize, DataTypes); // Defines the model
