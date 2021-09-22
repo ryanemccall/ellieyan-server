@@ -21,11 +21,11 @@ router.post('/', Auth, async(req, res) => {
     })
 }
 })
-//GET POSTS
-router.get("/all/:id", Auth, async(req, res) => {
+//GET POSTS FOR USER
+router.get("/myPosts", Auth, async(req, res) => {
     let u = await User.findOne({
         where: {
-            id: req.params.id
+            UserId: req.user.id
         }
     })
     let posts = u ? await u.getPosts(): null
@@ -37,6 +37,50 @@ router.get("/all/:id", Auth, async(req, res) => {
         res.send(cleanPosts)
     } else {
         res.send(posts)
+    }
+})
+
+//GET ONE POST
+router.get('/:id', Auth, async (req, res) => {
+    const { id } = req.params 
+    try {
+        const post = await Post.findOne({ where: {id: id }})
+        if (post.length === 0) {
+            res.status(404).json({
+                message: "No post could be found."
+            })
+        } else {
+            res.status(200).json({
+                message: `Here is the post: ${post}`
+            })
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: 'There seems to be an issue',
+            error: err
+        })
+    }
+})
+
+//GET ALL POSTS
+router.get('/', async (req, res) => {
+    try {
+        const allPosts = await Post.findAll()
+        if (allPosts.length === 0) {
+            res.status(404).json({
+                message: 'There are no posts at this time'
+            })
+        } else {
+            res.status(200).json({
+                message: 'Here is the feed',
+                allPosts: allPosts
+            })
+        }
+    } catch (err) {
+        res.status(500).json({
+            message: 'There was an error',
+            error: err 
+        })
     }
 })
 
