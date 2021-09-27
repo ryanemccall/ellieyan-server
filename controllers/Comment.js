@@ -10,7 +10,8 @@ router.post('/post/:pid', Auth, async(req, res) => {
         if (post) {
             const comment = await Comment.create({
                 content: req.body.comment.content,
-                UserId: req.body.UserId
+                UserId: req.body.UserId,
+                PostId: req.params.pid
             })
             res.status(200).json({
                 message: 'Comment made',

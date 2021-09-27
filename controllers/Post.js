@@ -10,7 +10,7 @@ router.post('/', Auth, async(req, res) => {
         const post = await Post.create({
                 postTitle: req.body.post.postTitle,
                 content: req.body.post.content,
-                UserId: req.body.UserId
+                UserId: req.user.id
             }) 
             res.status(200).json({
                 message:'Post made!', 
@@ -25,7 +25,7 @@ router.post('/', Auth, async(req, res) => {
 router.get("/myPosts", Auth, async(req, res) => {
     let u = await User.findOne({
         where: {
-            UserId: req.user.id
+            id: req.user.id
         }
     })
     let posts = u ? await u.getPosts(): null
@@ -79,7 +79,7 @@ router.get('/', async (req, res) => {
     } catch (err) {
         res.status(500).json({
             message: 'There was an error',
-            error: err 
+            error: err
         })
     }
 })
