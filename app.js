@@ -4,7 +4,7 @@ const app = Express()
 // const {sequelize} = require('./db')
 
 
-const port = 3000
+//const port = 3000
 
 
  ;(async () => {
@@ -32,7 +32,7 @@ const port = 3000
     app.use('/favorite', favorite);
 
 
-    app.listen(port, () => {
-        console.log(`[Server]: App is listening on 3000.`)
+    app.listen(process.env.PORT, () => {
+        console.log(`[Server]: App is listening on port: ${process.env.PORT}.`)
     })
 })()
