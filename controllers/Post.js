@@ -63,7 +63,7 @@ router.get('/:id', Auth, async (req, res) => {
 })
 
 //GET ALL POSTS
-router.get('/', async (req, res) => {
+router.get('/all', async (req, res) => {
     try {
         const allPosts = await Post.findAll()
         if (allPosts.length === 0) {

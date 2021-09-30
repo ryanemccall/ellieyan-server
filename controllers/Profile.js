@@ -24,9 +24,9 @@ router.get('/user/:uid', Auth, async (req, res) => {
     }
 })
 
-router.get('/:id', Auth, async (req, res) => {
+router.get('/', Auth, async (req, res) => {
     try {
-        const oneP = await Profile.findOne({ where: { id: req.params.id }})
+        const oneP = await Profile.findOne({ where: { UserId: req.user.id }})
         res.status(200).json(oneP)
     } catch (err) {
         res.status(500).json({err})
@@ -40,7 +40,7 @@ router.post('/', Auth, async (req, res) => {
             lastName: req.body.profile.lastName,
             aboutMe: req.body.profile.aboutMe,
             birthDate: req.body.profile.birthDate,
-            userId: req.body.userId
+            UserId: req.user.id
         })
         res.status(200).json('Profile has been created', result)
     } catch (err) {
