@@ -4,6 +4,7 @@ const sequelize = new Sequelize( process.env.DATABASE_URL,
     // process.env.DB_DBNAME,
     // process.env.DB_USER,
     // process.env.DB_PASS,
+    //Can have change that heroku will track for environment
     {
         //host: process.env.DB_HOST,
         dialect: 'postgres',
