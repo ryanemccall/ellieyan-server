@@ -14,6 +14,7 @@ const sequelize = new Sequelize( process.env.DATABASE_URL,
                 rejectUnauthorized: false
             }
         }
+        //have to comment out dialectOptions to run on local
     }
 )
 
